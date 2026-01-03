@@ -71,42 +71,9 @@ class KanbanAPITester:
         self.user_id = "test-admin-1767437643121"
         self.session_token = "test_session_1767437643121"
         
-        # Use pymongo to insert test data directly
-        try:
-            from pymongo import MongoClient
-            client = MongoClient("mongodb://localhost:27017")
-            db = client["test_database"]
-            
-            # Insert user
-            user_doc = {
-                "user_id": self.user_id,
-                "email": f"test.user.{timestamp}@example.com",
-                "name": "Test User",
-                "picture": "https://via.placeholder.com/150",
-                "role": "user",
-                "created_at": datetime.now(timezone.utc).isoformat()
-            }
-            db.users.insert_one(user_doc)
-            
-            # Insert session
-            session_doc = {
-                "user_id": self.user_id,
-                "session_token": self.session_token,
-                "expires_at": (datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
-                "created_at": datetime.now(timezone.utc).isoformat()
-            }
-            db.user_sessions.insert_one(session_doc)
-            
-            client.close()
-            
-            print(f"✅ Test user created: {self.user_id}")
-            print(f"✅ Session token: {self.session_token}")
-            return True
-        except Exception as e:
-            print(f"❌ Failed to create test user: {e}")
-            # Try without MongoDB setup for basic API testing
-            print("⚠️  Continuing without auth for basic endpoint testing...")
-            return True
+        print(f"✅ Using admin user: {self.user_id}")
+        print(f"✅ Session token: {self.session_token}")
+        return True
 
     def cleanup_test_data(self):
         """Clean up test data from MongoDB"""
