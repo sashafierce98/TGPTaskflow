@@ -159,10 +159,11 @@ export default function Dashboard() {
                 Create Board
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent aria-describedby="create-board-description">
               <DialogHeader>
                 <DialogTitle style={{ fontFamily: 'Manrope' }}>Create New Board</DialogTitle>
               </DialogHeader>
+              <p id="create-board-description" className="sr-only">Create a new Kanban board with name and description</p>
               <div className="space-y-4 mt-4">
                 <div>
                   <Label htmlFor="board-name">Board Name</Label>
