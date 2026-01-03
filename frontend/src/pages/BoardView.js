@@ -1,0 +1,358 @@
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { ArrowLeft, Plus, Settings, MoreVertical, Calendar, User as UserIcon, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+const priorityColors = {
+  low: "bg-[#10B981] text-white",
+  medium: "bg-[#F59E0B] text-white",
+  high: "bg-[#EF4444] text-white"
+};
+
+export default function BoardView() {
+  const { boardId } = useParams();
+  const navigate = useNavigate();
+  const [board, setBoard] = useState(null);
+  const [columns, setColumns] = useState([]);
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showAddCard, setShowAddCard] = useState(null);
+  const [showCardDetail, setShowCardDetail] = useState(null);
+  const [newCard, setNewCard] = useState({
+    title: "",
+    description: "",
+    priority: "medium",
+    due_date: ""
+  });
+
+  useEffect(() => {
+    fetchBoardData();
+  }, [boardId]);
+
+  const fetchBoardData = async () => {
+    try {
+      const [boardRes, columnsRes, cardsRes] = await Promise.all([
+        axios.get(`${BACKEND_URL}/api/boards/${boardId}`, { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/boards/${boardId}/columns`, { withCredentials: true }),
+        axios.get(`${BACKEND_URL}/api/boards/${boardId}/cards`, { withCredentials: true })
+      ]);
+      setBoard(boardRes.data);
+      setColumns(columnsRes.data);
+      setCards(cardsRes.data);
+    } catch (error) {
+      console.error("Failed to fetch board:", error);
+      toast.error("Failed to load board");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddCard = async (columnId) => {
+    if (!newCard.title.trim()) {
+      toast.error("Card title is required");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/boards/${boardId}/columns/${columnId}/cards`,
+        newCard,
+        { withCredentials: true }
+      );
+      toast.success("Card created");
+      setShowAddCard(null);
+      setNewCard({ title: "", description: "", priority: "medium", due_date: "" });
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to create card:", error);
+      toast.error("Failed to create card");
+    }
+  };
+
+  const handleDragEnd = async (result) => {
+    const { source, destination, draggableId } = result;
+
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/cards/${draggableId}`,
+        { column_id: destination.droppableId },
+        { withCredentials: true }
+      );
+      fetchBoardData();
+      toast.success("Card moved");
+    } catch (error) {
+      console.error("Failed to move card:", error);
+      toast.error("Failed to move card");
+    }
+  };
+
+  const getCardsForColumn = (columnId) => {
+    return cards.filter(card => card.column_id === columnId);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="text-center">
+          <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-[#2E5C38] border-r-transparent"></div>
+          <p className="mt-4 text-[#475569]">Loading board...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#F8FAFC]">
+      <nav className="bg-white border-b border-[#E2E8F0] sticky top-0 z-50 backdrop-blur-md bg-white/80">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/dashboard")}
+                data-testid="back-to-dashboard"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
+                  {board?.name}
+                </h1>
+                {board?.description && (
+                  <p className="text-sm text-[#475569]">{board.description}</p>
+                )}
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              data-testid="board-settings"
+            >
+              <Settings className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="p-6 overflow-x-auto kanban-scrollbar">
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <div className="flex gap-6 min-w-max pb-4">
+            {columns.map((column) => {
+              const columnCards = getCardsForColumn(column.column_id);
+              const isWipLimitReached = column.wip_limit && columnCards.length >= column.wip_limit;
+
+              return (
+                <div key={column.column_id} className="flex-shrink-0 w-[320px]">
+                  <div className="bg-white rounded-lg border border-[#E2E8F0] p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3 h-3 rounded-full"
+                          style={{ backgroundColor: column.color }}
+                        ></div>
+                        <h3 className="font-semibold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
+                          {column.name}
+                        </h3>
+                        <span className="text-sm text-[#64748B]">
+                          {columnCards.length}
+                          {column.wip_limit && ` / ${column.wip_limit}`}
+                        </span>
+                      </div>
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </div>
+
+                    {isWipLimitReached && (
+                      <div className="bg-[#FEF3C7] border border-[#F59E0B] rounded p-2 mb-3 flex items-center gap-2">
+                        <AlertCircle className="w-4 h-4 text-[#F59E0B]" />
+                        <span className="text-xs text-[#92400E]">WIP limit reached</span>
+                      </div>
+                    )}
+
+                    <Droppable droppableId={column.column_id}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          className={`space-y-3 min-h-[100px] ${
+                            snapshot.isDraggingOver ? 'bg-[#E2E8F0]/30 rounded-lg p-2' : ''
+                          }`}
+                        >
+                          {columnCards.map((card, index) => (
+                            <Draggable key={card.card_id} draggableId={card.card_id} index={index}>
+                              {(provided, snapshot) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] transition-all duration-200 ease-out ${
+                                    snapshot.isDragging ? 'card-drag-preview' : ''
+                                  }`}
+                                  onClick={() => setShowCardDetail(card)}
+                                  data-testid={`card-${card.card_id}`}
+                                >
+                                  <div className="flex items-start justify-between mb-2">
+                                    <h4 className="font-medium text-[#1E293B] flex-1">{card.title}</h4>
+                                    <span className={`text-xs px-2 py-1 rounded ${priorityColors[card.priority]}`}>
+                                      {card.priority}
+                                    </span>
+                                  </div>
+                                  {card.description && (
+                                    <p className="text-sm text-[#475569] mb-3 line-clamp-2">{card.description}</p>
+                                  )}
+                                  <div className="flex items-center gap-3 text-xs text-[#64748B]">
+                                    {card.due_date && (
+                                      <div className="flex items-center gap-1">
+                                        <Calendar className="w-3 h-3" />
+                                        <span>{new Date(card.due_date).toLocaleDateString()}</span>
+                                      </div>
+                                    )}
+                                    {card.assigned_to && (
+                                      <div className="flex items-center gap-1">
+                                        <UserIcon className="w-3 h-3" />
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                            </Draggable>
+                          ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+
+                    <Dialog
+                      open={showAddCard === column.column_id}
+                      onOpenChange={(open) => setShowAddCard(open ? column.column_id : null)}
+                    >
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="w-full mt-3 text-[#475569] hover:text-[#2E5C38] hover:bg-[#2E5C38]/5"
+                          data-testid={`add-card-${column.column_id}`}
+                          disabled={isWipLimitReached}
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add Card
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle style={{ fontFamily: 'Manrope' }}>Create New Card</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4 mt-4">
+                          <div>
+                            <Label htmlFor="card-title">Title</Label>
+                            <Input
+                              id="card-title"
+                              data-testid="card-title-input"
+                              value={newCard.title}
+                              onChange={(e) => setNewCard({ ...newCard, title: e.target.value })}
+                              placeholder="Card title"
+                              className="focus:ring-[#2E5C38]"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="card-description">Description</Label>
+                            <Textarea
+                              id="card-description"
+                              data-testid="card-description-input"
+                              value={newCard.description}
+                              onChange={(e) => setNewCard({ ...newCard, description: e.target.value })}
+                              placeholder="Card description"
+                              className="focus:ring-[#2E5C38]"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="card-priority">Priority</Label>
+                            <Select
+                              value={newCard.priority}
+                              onValueChange={(value) => setNewCard({ ...newCard, priority: value })}
+                            >
+                              <SelectTrigger data-testid="card-priority-select">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="low">Low</SelectItem>
+                                <SelectItem value="medium">Medium</SelectItem>
+                                <SelectItem value="high">High</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div>
+                            <Label htmlFor="card-due-date">Due Date</Label>
+                            <Input
+                              id="card-due-date"
+                              data-testid="card-due-date-input"
+                              type="date"
+                              value={newCard.due_date}
+                              onChange={(e) => setNewCard({ ...newCard, due_date: e.target.value })}
+                              className="focus:ring-[#2E5C38]"
+                            />
+                          </div>
+                          <Button
+                            onClick={() => handleAddCard(column.column_id)}
+                            data-testid="create-card-submit"
+                            className="w-full bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+                          >
+                            Create Card
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </DragDropContext>
+      </div>
+
+      {showCardDetail && (
+        <Dialog open={!!showCardDetail} onOpenChange={() => setShowCardDetail(null)}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>{showCardDetail.title}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label>Description</Label>
+                <p className="text-[#475569] mt-2">{showCardDetail.description || "No description"}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Priority</Label>
+                  <span className={`inline-block mt-2 text-xs px-3 py-1 rounded ${priorityColors[showCardDetail.priority]}`}>
+                    {showCardDetail.priority}
+                  </span>
+                </div>
+                {showCardDetail.due_date && (
+                  <div>
+                    <Label>Due Date</Label>
+                    <p className="text-[#475569] mt-2">{new Date(showCardDetail.due_date).toLocaleDateString()}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </div>
+  );
+}
