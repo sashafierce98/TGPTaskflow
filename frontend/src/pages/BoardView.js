@@ -252,10 +252,11 @@ export default function BoardView() {
                           Add Card
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent aria-describedby="create-card-description">
                         <DialogHeader>
                           <DialogTitle style={{ fontFamily: 'Manrope' }}>Create New Card</DialogTitle>
                         </DialogHeader>
+                        <p id="create-card-description" className="sr-only">Create a new card with title, description, priority, and due date</p>
                         <div className="space-y-4 mt-4">
                           <div>
                             <Label htmlFor="card-title">Title</Label>
