@@ -113,9 +113,18 @@ class KanbanAPITester:
         """Clean up test data from MongoDB"""
         print("\n🧹 Cleaning up test data...")
         try:
-            import subprocess
-            cleanup_cmd = f"""mongosh --eval "use('test_database'); db.users.deleteMany({{email: /test\\.user\\./}}); db.user_sessions.deleteMany({{session_token: /test_session/}}); db.boards.deleteMany({{name: /Test Board/}}); db.columns.deleteMany({{board_id: /board_test/}}); db.cards.deleteMany({{board_id: /board_test/}});" """
-            subprocess.run(cleanup_cmd, shell=True, check=True, capture_output=True)
+            from pymongo import MongoClient
+            client = MongoClient("mongodb://localhost:27017")
+            db = client["test_database"]
+            
+            # Clean up test data
+            db.users.delete_many({"email": {"$regex": "test\\.user\\."}})
+            db.user_sessions.delete_many({"session_token": {"$regex": "test_session"}})
+            db.boards.delete_many({"name": {"$regex": "Test Board"}})
+            db.columns.delete_many({"board_id": {"$regex": "board_test"}})
+            db.cards.delete_many({"board_id": {"$regex": "board_test"}})
+            
+            client.close()
             print("✅ Test data cleaned up")
         except Exception as e:
             print(f"❌ Failed to cleanup: {e}")
