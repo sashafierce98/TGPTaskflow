@@ -1,0 +1,132 @@
+{
+  "identity": {
+    "name": "TGP Bioplastics",
+    "mission": "Sustainable manufacturing efficiency through clarity and precision.",
+    "tone": "Professional, Eco-Industrial, Efficient, Transparent",
+    "archetype": "Organic & Earthy (Trust, Growth, Calm) with a Technical Twist"
+  },
+  "typography": {
+    "headings": {
+      "family": "Manrope",
+      "weights": ["600", "700", "800"],
+      "usage": "All section headers, modal titles, and dashboard widget titles. Use tight tracking (-0.02em)."
+    },
+    "body": {
+      "family": "Inter",
+      "weights": ["400", "500"],
+      "usage": "General text, card descriptions, inputs. Optimized for legibility at small sizes."
+    },
+    "mono": {
+      "family": "JetBrains Mono",
+      "usage": "ID numbers, timestamps, technical data points."
+    }
+  },
+  "colors": {
+    "primary": {
+      "name": "Bio-Moss",
+      "hex": "#2E5C38",
+      "usage": "Primary buttons, active states, key brand elements. Represents sustainability and growth."
+    },
+    "secondary": {
+      "name": "Industrial Slate",
+      "hex": "#475569",
+      "usage": "Secondary buttons, inactive icons, borders. Represents the manufacturing machinery."
+    },
+    "accent": {
+      "name": "Pellet Amber",
+      "hex": "#F59E0B",
+      "usage": "Warnings, 'In Progress' status, call-to-action highlights. Represents the raw bioplastic material."
+    },
+    "background": {
+      "light": "#F8FAFC",
+      "dark": "#0F172A",
+      "paper": "#FFFFFF"
+    },
+    "status": {
+      "backlog": "#64748B",
+      "todo": "#3B82F6",
+      "wip": "#F59E0B",
+      "done": "#10B981",
+      "blocked": "#EF4444"
+    }
+  },
+  "visual_enhancers": {
+    "borders": "1px solid rgba(0,0,0,0.08) for light mode, rgba(255,255,255,0.1) for dark mode. Use 'rounded-lg' for cards.",
+    "shadows": "shadow-sm for cards, shadow-md for hover states. Avoid heavy drop shadows; prefer subtle depth.",
+    "glassmorphism": "Use 'backdrop-blur-md bg-white/80' for sticky headers and modal overlays to maintain context.",
+    "textures": "Subtle noise overlay on the sidebar background to give a 'recycled paper' feel."
+  },
+  "layout_strategy": {
+    "dashboard": "Bento Grid (Mode B: Control Room). Dense, data-heavy, minimal gaps (gap-4).",
+    "landing_page": "Tetris Grid (Mode A). Asymmetrical, generous spacing (gap-12), large hero visuals.",
+    "kanban_board": "Horizontal scrolling swimlanes. Columns must have fixed width (min-w-[300px]) but flexible height."
+  },
+  "components": {
+    "buttons": "Pill-shaped for marketing, slightly rounded rectangles (rounded-md) for dashboard actions.",
+    "cards": "Flat white background with 1px border. On hover: slight lift (-translate-y-1) and border color shift to Primary.",
+    "inputs": "Shadcn default with 'focus:ring-primary' customization.",
+    "modals": "Clean, white background, no heavy headers. Use large typography for titles."
+  },
+  "motion": {
+    "hover": "transition-all duration-200 ease-out",
+    "drag": "Scale up (1.02) and shadow-lg when dragging a card.",
+    "page_load": "Staggered fade-in for dashboard widgets (0.1s delay per item)."
+  },
+  "accessibility": {
+    "contrast": "Ensure text is always WCAG AA compliant. Use dark slate (#1E293B) for text on light backgrounds, never pure black.",
+    "focus_states": "Visible 2px ring in Primary color offset by 2px.",
+    "reduced_motion": "Respect user preference for reduced motion."
+  },
+  "image_urls": {
+    "hero_background": {
+      "url": "https://images.pexels.com/photos/236698/pexels-photo-236698.jpeg",
+      "description": "Clean, modern factory aisle with bright lighting. Use as hero background with overlay.",
+      "category": "landing"
+    },
+    "team_collaboration": {
+      "url": "https://images.unsplash.com/photo-1713977331855-b3e2d63a90c2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwxfHxkaXZlcnNlJTIwbWFudWZhY3R1cmluZyUyMHRlYW0lMjBtZWV0aW5nJTIwd2l0aCUyMHRhYmxldHN8ZW58MHx8fHwxNzY3NDMzMTg0fDA&ixlib=rb-4.1.0&q=85",
+      "description": "Diverse team discussing on tablets. Use for 'About Us' or 'Team' section.",
+      "category": "landing"
+    },
+    "texture_accent": {
+      "url": "https://images.pexels.com/photos/35445258/pexels-photo-35445258.jpeg",
+      "description": "Abstract bioplastic pellets. Use as a texture background for cards or banners.",
+      "category": "texture"
+    },
+    "lab_context": {
+      "url": "https://images.pexels.com/photos/9242907/pexels-photo-9242907.jpeg",
+      "description": "Lab setting with equipment. Use for 'Quality Control' feature highlight.",
+      "category": "landing"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Implement the 'Manrope' font for all headings. Import it from Google Fonts.",
+    "Use the defined 'Bio-Moss' (#2E5C38) as the primary brand color. Do NOT use the forbidden Teal.",
+    "Create a 'KanbanCard' component that is distinct from the standard Shadcn Card. It should be more compact and have a colored status indicator.",
+    "Ensure the Kanban board supports horizontal scrolling for many columns.",
+    "Use the 'Bento Grid' layout for the main dashboard overview (stats + recent activity).",
+    "Apply the 'Subtle noise' texture to the sidebar to reinforce the 'Bioplastic/Recycled' brand identity.",
+    "For the Landing Page, use the 'Tetris Grid' layout to showcase features asymmetrically.",
+    "All interactive elements must have 'data-testid' attributes."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Dark colors look good when used independently without gradients. DO NOT use dark colors as gradients.",
+    "Don't make generic centered layouts, simplistic gradients, and uniform styling.",
+    "Create depth through layered design elements with z-index hierarchy.",
+    "Use glass-morphism effects with backdrop filters (12-24px blur).",
+    "You MUST NOT apply universal transition. Eg: 'transition: all'. This results in breaking transforms. Always add transitions for specific interactive elements like button, input excluding transforms.",
+    "You MUST NOT center align the app container, ie do not add '.App { text-align: center; }' in the css file. This disrupts the human natural reading flow of text.",
+    "Always use modern button styles like pill-shaped, or sharp button with interaction animations & color relevant to the app style.",
+    "NEVER: use AI assistant Emoji characters like 🤖🧠💭💡🔮🎯📚🎭🎬🎪🎉🎊🎁🎀🎂🍰🎈🎨🎰💰💵💳🏦💎🪙💸🤑📊📈📉💹🔢🏆🥇 etc for icons.",
+    "Every interaction needs micro-animations - hover states, transitions, parallax effects, and entrance animations. Static = dead.",
+    "Use 2-3x more spacing than feels comfortable. Cramped designs look cheap.",
+    "Subtle grain textures, noise overlays, custom cursors, selection states, and loading animations: separates good from extraordinary.",
+    "Main agent relies on these image URLs. Missing categories (especially sponsor logos) = main agent will use placeholder text which is FORBIDDEN.",
+    "Prioritize using pre-existing components from src/components/ui when applicable.",
+    "Create new components that match the style and conventions of existing components when needed.",
+    "Examine existing components to understand the project's component patterns before creating new ones.",
+    "Components MUST use named exports (export const ComponentName = ...).",
+    "Pages MUST use default exports (export default function PageName() {...}).",
+    "Use 'sonner' for toasts. Sonner component are located in '/app/src/components/ui/sonner.tsx'."
+  ]
+}
