@@ -68,8 +68,8 @@ class KanbanAPITester:
         print("\n🔧 Using existing admin test user...")
         
         # Use the admin user we created earlier
-        self.user_id = "test-admin-1767437643121"
-        self.session_token = "test_session_1767437643121"
+        self.user_id = "test-admin-1767437760121"
+        self.session_token = "test_session_1767437760121"
         
         print(f"✅ Using admin user: {self.user_id}")
         print(f"✅ Session token: {self.session_token}")
