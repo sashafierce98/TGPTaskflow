@@ -197,7 +197,7 @@ class KanbanAPITester:
             "Create Card",
             "POST",
             f"api/boards/{self.test_board_id}/columns/{self.test_column_id}/cards",
-            200,
+            201,
             data=card_data
         )
         
