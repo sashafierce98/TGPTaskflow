@@ -327,10 +327,11 @@ export default function BoardView() {
 
       {showCardDetail && (
         <Dialog open={!!showCardDetail} onOpenChange={() => setShowCardDetail(null)}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl" aria-describedby="card-detail-description">
             <DialogHeader>
               <DialogTitle style={{ fontFamily: 'Manrope' }}>{showCardDetail.title}</DialogTitle>
             </DialogHeader>
+            <p id="card-detail-description" className="sr-only">View detailed information about this card</p>
             <div className="space-y-4 mt-4">
               <div>
                 <Label>Description</Label>
