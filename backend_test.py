@@ -64,13 +64,12 @@ class KanbanAPITester:
             return False, {}
 
     def setup_test_user(self):
-        """Create test user and session in MongoDB"""
-        print("\n🔧 Setting up test user...")
+        """Use existing admin test user"""
+        print("\n🔧 Using existing admin test user...")
         
-        # Generate test data
-        timestamp = int(datetime.now().timestamp())
-        self.user_id = f"test_user_{timestamp}"
-        self.session_token = f"test_session_{timestamp}"
+        # Use the admin user we created earlier
+        self.user_id = "test-admin-1767437643121"
+        self.session_token = "test_session_1767437643121"
         
         # Use pymongo to insert test data directly
         try:
