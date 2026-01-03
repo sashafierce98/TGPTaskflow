@@ -136,6 +136,10 @@ async def get_current_user(request: Request) -> str:
     
     return session_doc["user_id"]
 
+@api_router.get("/")
+async def root():
+    return {"message": "TGP Bioplastics Kanban API", "status": "running"}
+
 @api_router.post("/auth/session")
 async def create_session(request: Request, response: Response):
     session_id = request.headers.get("X-Session-ID")
