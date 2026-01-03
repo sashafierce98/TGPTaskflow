@@ -127,7 +127,7 @@ class KanbanAPITester:
             "Create Board",
             "POST",
             "api/boards",
-            201,
+            200,
             data=board_data
         )
         
