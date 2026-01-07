@@ -490,6 +490,96 @@ export default function BoardView() {
           </DialogContent>
         </Dialog>
       )}
+
+      {showBoardSettings && (
+        <Dialog open={showBoardSettings} onOpenChange={setShowBoardSettings}>
+          <DialogContent aria-describedby="board-settings-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Board Settings</DialogTitle>
+            </DialogHeader>
+            <p id="board-settings-description" className="sr-only">Add new columns and manage board settings</p>
+            <div className="space-y-6 mt-4">
+              <div className="border-b border-[#E2E8F0] pb-4">
+                <h3 className="text-lg font-semibold text-[#1E293B] mb-4" style={{ fontFamily: 'Manrope' }}>
+                  Add New Column
+                </h3>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="new-column-name">Column Name</Label>
+                    <Input
+                      id="new-column-name"
+                      data-testid="new-column-name-input"
+                      value={newColumn.name}
+                      onChange={(e) => setNewColumn({ ...newColumn, name: e.target.value })}
+                      placeholder="e.g., Testing, Review, Blocked"
+                      className="focus:ring-[#2E5C38]"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-wip-limit">WIP Limit (optional)</Label>
+                    <Input
+                      id="new-wip-limit"
+                      data-testid="new-column-wip-input"
+                      type="number"
+                      min="0"
+                      value={newColumn.wip_limit}
+                      onChange={(e) => setNewColumn({ ...newColumn, wip_limit: e.target.value })}
+                      placeholder="Leave empty for unlimited"
+                      className="focus:ring-[#2E5C38]"
+                    />
+                  </div>
+                  <div>
+                    <Label>Column Color</Label>
+                    <div className="flex gap-2 mt-2">
+                      {["#64748B", "#3B82F6", "#F59E0B", "#10B981", "#EF4444", "#8B5CF6", "#EC4899"].map((color) => (
+                        <button
+                          key={color}
+                          onClick={() => setNewColumn({ ...newColumn, color })}
+                          className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+                            newColumn.color === color ? "border-[#2E5C38] scale-110" : "border-transparent"
+                          }`}
+                          style={{ backgroundColor: color }}
+                          data-testid={`new-color-${color}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={handleAddColumn}
+                    data-testid="add-column-submit"
+                    className="w-full bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Column
+                  </Button>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-[#1E293B] mb-2" style={{ fontFamily: 'Manrope' }}>
+                  Current Columns
+                </h3>
+                <p className="text-sm text-[#64748B] mb-3">
+                  Click the 3-dot menu on each column to edit or delete
+                </p>
+                <div className="space-y-2">
+                  {columns.map((col) => (
+                    <div key={col.column_id} className="flex items-center justify-between p-3 bg-[#F8FAFC] rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 rounded-full" style={{ backgroundColor: col.color }}></div>
+                        <span className="font-medium text-[#1E293B]">{col.name}</span>
+                        {col.wip_limit && (
+                          <span className="text-xs text-[#64748B]">Limit: {col.wip_limit}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
