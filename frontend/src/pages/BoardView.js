@@ -302,6 +302,7 @@ export default function BoardView() {
             {columns.map((column) => {
               const columnCards = getCardsForColumn(column.column_id);
               const isWipLimitReached = column.wip_limit && columnCards.length >= column.wip_limit;
+              const isQuestionsColumn = column.name === "Questions";
 
               return (
                 <div key={column.column_id} className="flex-shrink-0 w-[320px]">
@@ -320,15 +321,17 @@ export default function BoardView() {
                           {column.wip_limit && ` / ${column.wip_limit}`}
                         </span>
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8"
-                        onClick={() => openColumnSettings(column)}
-                        data-testid={`column-settings-${column.column_id}`}
-                      >
-                        <MoreVertical className="w-4 h-4" />
-                      </Button>
+                      {!isQuestionsColumn && (
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8"
+                          onClick={() => openColumnSettings(column)}
+                          data-testid={`column-settings-${column.column_id}`}
+                        >
+                          <MoreVertical className="w-4 h-4" />
+                        </Button>
+                      )}
                     </div>
 
                     {isWipLimitReached && (
@@ -338,7 +341,47 @@ export default function BoardView() {
                       </div>
                     )}
 
-                    <Droppable droppableId={column.column_id}>
+                    {isQuestionsColumn ? (
+                      <div className="space-y-3 min-h-[100px]">
+                        {columnCards.map((card, index) => (
+                          <div
+                            key={card.card_id}
+                            className="bg-[#F5F3FF] border border-[#8B5CF6] rounded-lg p-4"
+                            data-testid={`question-${card.card_id}`}
+                          >
+                            <div className="flex items-start gap-2 mb-2">
+                              <div className="w-6 h-6 rounded-full bg-[#8B5CF6] flex items-center justify-center flex-shrink-0">
+                                <span className="text-white text-xs font-bold">Q</span>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-medium text-[#1E293B] text-sm">{card.title}</p>
+                                <p className="text-xs text-[#64748B] mt-1">
+                                  {new Date(card.created_at).toLocaleDateString()} at {new Date(card.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-full mt-2 text-[#8B5CF6] border-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white"
+                              onClick={() => setShowAnswerDialog(card)}
+                              data-testid={`answer-question-${card.card_id}`}
+                            >
+                              View Answers ({card.answer_count || 0})
+                            </Button>
+                          </div>
+                        ))}
+                        <Button
+                          variant="ghost"
+                          className="w-full text-[#8B5CF6] hover:text-[#8B5CF6] hover:bg-[#F5F3FF]"
+                          onClick={() => setShowQuestionDialog(true)}
+                          data-testid="ask-question-button"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Ask Question
+                        </Button>
+                      </div>
+                    ) : (
                       {(provided, snapshot) => (
                         <div
                           ref={provided.innerRef}
