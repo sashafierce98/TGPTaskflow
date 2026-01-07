@@ -449,6 +449,7 @@ export default function BoardView() {
                           Add Card
                         </Button>
                       </DialogTrigger>
+                      </DialogTrigger>
                       <DialogContent aria-describedby="create-card-description">
                         <DialogHeader>
                           <DialogTitle style={{ fontFamily: 'Manrope' }}>Create New Card</DialogTitle>
