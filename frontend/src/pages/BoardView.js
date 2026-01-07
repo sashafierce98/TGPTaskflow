@@ -148,6 +148,60 @@ export default function BoardView() {
     setShowColumnSettings(column.column_id);
   };
 
+  const handleAskQuestion = async () => {
+    if (!newQuestion.trim()) {
+      toast.error("Question cannot be empty");
+      return;
+    }
+
+    const questionsColumn = columns.find(c => c.name === "Questions");
+    if (!questionsColumn) {
+      toast.error("Questions column not found");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/boards/${boardId}/columns/${questionsColumn.column_id}/cards`,
+        {
+          title: newQuestion,
+          description: "",
+          priority: "medium"
+        },
+        { withCredentials: true }
+      );
+      toast.success("Question posted");
+      setShowQuestionDialog(false);
+      setNewQuestion("");
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to post question:", error);
+      toast.error("Failed to post question");
+    }
+  };
+
+  const handleAnswerQuestion = async (questionCard) => {
+    if (!newAnswer.trim()) {
+      toast.error("Answer cannot be empty");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/cards/${questionCard.card_id}/comments`,
+        { text: newAnswer },
+        { withCredentials: true }
+      );
+      toast.success("Answer posted");
+      setShowAnswerDialog(null);
+      setNewAnswer("");
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to post answer:", error);
+      toast.error("Failed to post answer");
+    }
+  };
+
   const handleDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
