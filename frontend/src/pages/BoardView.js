@@ -150,16 +150,30 @@ export default function BoardView() {
     if (!destination) return;
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
+    // Optimistic update - update UI immediately for smooth experience
+    const updatedCards = [...cards];
+    const cardIndex = updatedCards.findIndex(card => card.card_id === draggableId);
+    if (cardIndex !== -1) {
+      updatedCards[cardIndex] = {
+        ...updatedCards[cardIndex],
+        column_id: destination.droppableId
+      };
+      setCards(updatedCards);
+    }
+
+    // Then update backend without blocking UI
     try {
       await axios.put(
         `${BACKEND_URL}/api/cards/${draggableId}`,
         { column_id: destination.droppableId },
         { withCredentials: true }
       );
+      // Silently refresh data in background without toast
       fetchBoardData();
-      toast.success("Card moved");
     } catch (error) {
       console.error("Failed to move card:", error);
+      // Revert optimistic update on error
+      fetchBoardData();
       toast.error("Failed to move card");
     }
   };
