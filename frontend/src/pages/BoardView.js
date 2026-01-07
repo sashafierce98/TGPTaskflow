@@ -193,12 +193,29 @@ export default function BoardView() {
         { withCredentials: true }
       );
       toast.success("Answer posted");
-      setShowAnswerDialog(null);
       setNewAnswer("");
-      fetchBoardData();
+      // Fetch updated comments
+      const comments = await axios.get(
+        `${BACKEND_URL}/api/cards/${questionCard.card_id}/comments`,
+        { withCredentials: true }
+      );
+      setShowAnswerDialog({ ...questionCard, comments: comments.data });
     } catch (error) {
       console.error("Failed to post answer:", error);
       toast.error("Failed to post answer");
+    }
+  };
+
+  const openAnswerDialog = async (questionCard) => {
+    try {
+      const comments = await axios.get(
+        `${BACKEND_URL}/api/cards/${questionCard.card_id}/comments`,
+        { withCredentials: true }
+      );
+      setShowAnswerDialog({ ...questionCard, comments: comments.data });
+    } catch (error) {
+      console.error("Failed to fetch answers:", error);
+      setShowAnswerDialog({ ...questionCard, comments: [] });
     }
   };
 
