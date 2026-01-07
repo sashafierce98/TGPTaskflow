@@ -524,7 +524,7 @@ export default function BoardView() {
         </DragDropContext>
       </div>
 
-      {showCardDetail && (
+      {showColumnSettings && editingColumn && (
         <Dialog open={!!showCardDetail} onOpenChange={() => setShowCardDetail(null)}>
           <DialogContent className="max-w-2xl" aria-describedby="card-detail-description">
             <DialogHeader>
