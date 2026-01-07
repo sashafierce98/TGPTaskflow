@@ -451,23 +451,23 @@ export default function BoardView() {
                         </div>
                       )}
                     </Droppable>
-                    )}
 
-                    <Dialog
-                      open={showAddCard === column.column_id}
-                      onOpenChange={(open) => setShowAddCard(open ? column.column_id : null)}
-                    >
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="w-full mt-3 text-[#475569] hover:text-[#2E5C38] hover:bg-[#2E5C38]/5"
-                          data-testid={`add-card-${column.column_id}`}
-                          disabled={isWipLimitReached}
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add Card
-                        </Button>
-                      </DialogTrigger>
+                    {!isQuestionsColumn && (
+                      <Dialog
+                        open={showAddCard === column.column_id}
+                        onOpenChange={(open) => setShowAddCard(open ? column.column_id : null)}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="w-full mt-3 text-[#475569] hover:text-[#2E5C38] hover:bg-[#2E5C38]/5"
+                            data-testid={`add-card-${column.column_id}`}
+                            disabled={isWipLimitReached}
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Card
+                          </Button>
+                        </DialogTrigger>
                       <DialogContent aria-describedby="create-card-description">
                         <DialogHeader>
                           <DialogTitle style={{ fontFamily: 'Manrope' }}>Create New Card</DialogTitle>
