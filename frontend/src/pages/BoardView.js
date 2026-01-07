@@ -81,6 +81,37 @@ export default function BoardView() {
     }
   };
 
+  const handleUpdateColumn = async () => {
+    if (!editingColumn) return;
+
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/columns/${editingColumn.column_id}`,
+        {
+          name: editingColumn.name,
+          wip_limit: editingColumn.wip_limit === "" ? null : parseInt(editingColumn.wip_limit),
+          color: editingColumn.color
+        },
+        { withCredentials: true }
+      );
+      toast.success("Column updated");
+      setShowColumnSettings(null);
+      setEditingColumn(null);
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to update column:", error);
+      toast.error("Failed to update column");
+    }
+  };
+
+  const openColumnSettings = (column) => {
+    setEditingColumn({
+      ...column,
+      wip_limit: column.wip_limit ?? ""
+    });
+    setShowColumnSettings(column.column_id);
+  };
+
   const handleDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
