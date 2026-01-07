@@ -245,7 +245,7 @@ export default function BoardView() {
                         onClick={() => openColumnSettings(column)}
                         data-testid={`column-settings-${column.column_id}`}
                       >
-                        <Settings className="w-4 h-4" />
+                        <MoreVertical className="w-4 h-4" />
                       </Button>
                     </div>
 
