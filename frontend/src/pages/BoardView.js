@@ -205,8 +205,14 @@ export default function BoardView() {
                           {column.wip_limit && ` / ${column.wip_limit}`}
                         </span>
                       </div>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="w-4 h-4" />
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8"
+                        onClick={() => openColumnSettings(column)}
+                        data-testid={`column-settings-${column.column_id}`}
+                      >
+                        <Settings className="w-4 h-4" />
                       </Button>
                     </div>
 
