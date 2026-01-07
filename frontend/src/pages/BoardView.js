@@ -110,6 +110,32 @@ export default function BoardView() {
     }
   };
 
+  const handleAddColumn = async () => {
+    if (!newColumn.name.trim()) {
+      toast.error("Column name is required");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${BACKEND_URL}/api/boards/${boardId}/columns`,
+        {
+          name: newColumn.name,
+          wip_limit: newColumn.wip_limit === "" ? null : parseInt(newColumn.wip_limit),
+          color: newColumn.color
+        },
+        { withCredentials: true }
+      );
+      toast.success("Column added");
+      setShowBoardSettings(false);
+      setNewColumn({ name: "", wip_limit: "", color: "#64748B" });
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to add column:", error);
+      toast.error("Failed to add column");
+    }
+  };
+
   const openColumnSettings = (column) => {
     setEditingColumn({
       ...column,
