@@ -30,12 +30,16 @@ export default function BoardView() {
   const [showCardDetail, setShowCardDetail] = useState(null);
   const [showColumnSettings, setShowColumnSettings] = useState(null);
   const [showBoardSettings, setShowBoardSettings] = useState(false);
+  const [showQuestionDialog, setShowQuestionDialog] = useState(false);
+  const [showAnswerDialog, setShowAnswerDialog] = useState(null);
   const [editingColumn, setEditingColumn] = useState(null);
   const [newColumn, setNewColumn] = useState({
     name: "",
     wip_limit: "",
     color: "#64748B"
   });
+  const [newQuestion, setNewQuestion] = useState("");
+  const [newAnswer, setNewAnswer] = useState("");
   const [newCard, setNewCard] = useState({
     title: "",
     description: "",
