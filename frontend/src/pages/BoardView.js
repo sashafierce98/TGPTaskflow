@@ -394,6 +394,69 @@ export default function BoardView() {
           </DialogContent>
         </Dialog>
       )}
+
+      {showColumnSettings && editingColumn && (
+        <Dialog open={!!showColumnSettings} onOpenChange={() => setShowColumnSettings(null)}>
+          <DialogContent aria-describedby="column-settings-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Column Settings</DialogTitle>
+            </DialogHeader>
+            <p id="column-settings-description" className="sr-only">Customize column name, color, and WIP limit</p>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="column-name">Column Name</Label>
+                <Input
+                  id="column-name"
+                  data-testid="column-name-input"
+                  value={editingColumn.name}
+                  onChange={(e) => setEditingColumn({ ...editingColumn, name: e.target.value })}
+                  placeholder="Column name"
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <div>
+                <Label htmlFor="wip-limit">WIP Limit (leave empty for unlimited)</Label>
+                <Input
+                  id="wip-limit"
+                  data-testid="wip-limit-input"
+                  type="number"
+                  min="0"
+                  value={editingColumn.wip_limit}
+                  onChange={(e) => setEditingColumn({ ...editingColumn, wip_limit: e.target.value })}
+                  placeholder="e.g., 5"
+                  className="focus:ring-[#2E5C38]"
+                />
+                <p className="text-xs text-[#64748B] mt-1">
+                  Current: {editingColumn.wip_limit || "Unlimited"} | Recommended for "In Progress": 3-5
+                </p>
+              </div>
+              <div>
+                <Label htmlFor="column-color">Column Color</Label>
+                <div className="flex gap-2 mt-2">
+                  {["#64748B", "#3B82F6", "#F59E0B", "#10B981", "#EF4444", "#8B5CF6", "#EC4899"].map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setEditingColumn({ ...editingColumn, color })}
+                      className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
+                        editingColumn.color === color ? "border-[#2E5C38] scale-110" : "border-transparent"
+                      }`}
+                      style={{ backgroundColor: color }}
+                      data-testid={`color-${color}`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <Button
+                onClick={handleUpdateColumn}
+                data-testid="save-column-settings"
+                className="w-full bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+              >
+                Save Changes
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
