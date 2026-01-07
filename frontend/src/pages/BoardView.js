@@ -29,7 +29,13 @@ export default function BoardView() {
   const [showAddCard, setShowAddCard] = useState(null);
   const [showCardDetail, setShowCardDetail] = useState(null);
   const [showColumnSettings, setShowColumnSettings] = useState(null);
+  const [showBoardSettings, setShowBoardSettings] = useState(false);
   const [editingColumn, setEditingColumn] = useState(null);
+  const [newColumn, setNewColumn] = useState({
+    name: "",
+    wip_limit: "",
+    color: "#64748B"
+  });
   const [newCard, setNewCard] = useState({
     title: "",
     description: "",
