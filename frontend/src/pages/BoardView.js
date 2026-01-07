@@ -451,6 +451,7 @@ export default function BoardView() {
                         </div>
                       )}
                     </Droppable>
+                    )}
 
                     {!isQuestionsColumn && (
                       <Dialog
