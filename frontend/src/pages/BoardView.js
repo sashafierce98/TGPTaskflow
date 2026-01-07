@@ -707,6 +707,109 @@ export default function BoardView() {
           </DialogContent>
         </Dialog>
       )}
+
+      {showQuestionDialog && (
+        <Dialog open={showQuestionDialog} onOpenChange={setShowQuestionDialog}>
+          <DialogContent aria-describedby="ask-question-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Ask a Question</DialogTitle>
+            </DialogHeader>
+            <p id="ask-question-description" className="sr-only">Post a question for your team to answer</p>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="question-text">Your Question</Label>
+                <Textarea
+                  id="question-text"
+                  data-testid="question-text-input"
+                  value={newQuestion}
+                  onChange={(e) => setNewQuestion(e.target.value)}
+                  placeholder="What would you like to know?"
+                  className="focus:ring-[#8B5CF6] min-h-[100px]"
+                />
+              </div>
+              <Button
+                onClick={handleAskQuestion}
+                data-testid="submit-question"
+                className="w-full bg-[#8B5CF6] hover:bg-[#8B5CF6]/90 text-white"
+              >
+                Post Question
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showAnswerDialog && (
+        <Dialog open={!!showAnswerDialog} onOpenChange={() => setShowAnswerDialog(null)}>
+          <DialogContent className="max-w-2xl" aria-describedby="answer-question-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Question & Answers</DialogTitle>
+            </DialogHeader>
+            <p id="answer-question-description" className="sr-only">View and post answers to this question</p>
+            <div className="space-y-4 mt-4">
+              <div className="bg-[#F5F3FF] border border-[#8B5CF6] rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <div className="w-8 h-8 rounded-full bg-[#8B5CF6] flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-bold">Q</span>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#1E293B]">{showAnswerDialog.title}</p>
+                    <p className="text-xs text-[#64748B] mt-1">
+                      Asked on {new Date(showAnswerDialog.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-[#1E293B] mb-3" style={{ fontFamily: 'Manrope' }}>
+                  Answers ({showAnswerDialog.comments?.length || 0})
+                </h4>
+                <div className="space-y-3 max-h-[300px] overflow-y-auto">
+                  {showAnswerDialog.comments && showAnswerDialog.comments.length > 0 ? (
+                    showAnswerDialog.comments.map((comment, idx) => (
+                      <div key={idx} className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-lg p-3">
+                        <div className="flex items-start gap-2">
+                          <div className="w-6 h-6 rounded-full bg-[#2E5C38] flex items-center justify-center flex-shrink-0">
+                            <span className="text-white text-xs font-bold">A</span>
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm text-[#1E293B]">{comment.text}</p>
+                            <p className="text-xs text-[#64748B] mt-1">
+                              {new Date(comment.created_at).toLocaleDateString()} at {new Date(comment.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-[#64748B] text-center py-4">No answers yet. Be the first to answer!</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="answer-text">Your Answer</Label>
+                <Textarea
+                  id="answer-text"
+                  data-testid="answer-text-input"
+                  value={newAnswer}
+                  onChange={(e) => setNewAnswer(e.target.value)}
+                  placeholder="Share your knowledge..."
+                  className="focus:ring-[#2E5C38] mt-2"
+                />
+                <Button
+                  onClick={() => handleAnswerQuestion(showAnswerDialog)}
+                  data-testid="submit-answer"
+                  className="w-full mt-3 bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+                >
+                  Post Answer
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
