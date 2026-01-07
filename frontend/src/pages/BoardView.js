@@ -154,6 +154,16 @@ export default function BoardView() {
     if (!destination) return;
     if (source.droppableId === destination.droppableId && source.index === destination.index) return;
 
+    // Get column names to check for Questions column
+    const sourceColumn = columns.find(c => c.column_id === source.droppableId);
+    const destColumn = columns.find(c => c.column_id === destination.droppableId);
+
+    // Prevent dragging to/from Questions column
+    if (sourceColumn?.name === "Questions" || destColumn?.name === "Questions") {
+      toast.error("Questions cannot be moved to other columns");
+      return;
+    }
+
     // Optimistic update - update UI immediately for smooth experience
     const updatedCards = [...cards];
     const cardIndex = updatedCards.findIndex(card => card.card_id === draggableId);
