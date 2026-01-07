@@ -381,7 +381,7 @@ export default function BoardView() {
                               variant="outline"
                               size="sm"
                               className="w-full mt-2 text-[#8B5CF6] border-[#8B5CF6] hover:bg-[#8B5CF6] hover:text-white"
-                              onClick={() => setShowAnswerDialog(card)}
+                              onClick={() => openAnswerDialog(card)}
                               data-testid={`answer-question-${card.card_id}`}
                             >
                               View Answers ({card.answer_count || 0})
