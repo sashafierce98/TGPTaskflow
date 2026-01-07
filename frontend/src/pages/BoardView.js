@@ -399,14 +399,15 @@ export default function BoardView() {
                         </Button>
                       </div>
                     ) : (
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          className={`space-y-3 min-h-[100px] ${
-                            snapshot.isDraggingOver ? 'bg-[#E2E8F0]/30 rounded-lg p-2' : ''
-                          }`}
-                        >
+                      <Droppable droppableId={column.column_id}>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            className={`space-y-3 min-h-[100px] ${
+                              snapshot.isDraggingOver ? 'bg-[#E2E8F0]/30 rounded-lg p-2' : ''
+                            }`}
+                          >
                           {columnCards.map((card, index) => (
                             <Draggable key={card.card_id} draggableId={card.card_id} index={index}>
                               {(provided, snapshot) => (
