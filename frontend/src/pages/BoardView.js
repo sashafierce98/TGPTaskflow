@@ -286,8 +286,8 @@ export default function BoardView() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] transition-all duration-200 ease-out ${
-                                    snapshot.isDragging ? 'card-drag-preview' : ''
+                                  className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] ${
+                                    snapshot.isDragging ? 'card-drag-preview' : 'transition-colors duration-200 ease-out'
                                   }`}
                                   onClick={() => setShowCardDetail(card)}
                                   data-testid={`card-${card.card_id}`}
