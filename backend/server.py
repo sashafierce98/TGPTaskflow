@@ -239,10 +239,10 @@ async def create_board(input: CreateBoardInput, request: Request):
     await db.boards.insert_one(board_doc)
     
     default_columns = [
-        {"name": "Backlog", "color": "#64748B", "order": 0},
-        {"name": "To Do", "color": "#3B82F6", "order": 1},
-        {"name": "In Progress", "color": "#F59E0B", "order": 2},
-        {"name": "Done", "color": "#10B981", "order": 3}
+        {"name": "Backlog", "color": "#64748B", "order": 0, "wip_limit": None},
+        {"name": "To Do", "color": "#3B82F6", "order": 1, "wip_limit": 15},
+        {"name": "In Progress", "color": "#F59E0B", "order": 2, "wip_limit": 5},
+        {"name": "Done", "color": "#10B981", "order": 3, "wip_limit": None}
     ]
     
     for col in default_columns:
@@ -251,7 +251,7 @@ async def create_board(input: CreateBoardInput, request: Request):
             "board_id": board_id,
             "name": col["name"],
             "order": col["order"],
-            "wip_limit": None,
+            "wip_limit": col["wip_limit"],
             "color": col["color"],
             "created_at": now
         }
