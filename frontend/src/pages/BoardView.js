@@ -205,6 +205,7 @@ export default function BoardView() {
             <Button
               variant="ghost"
               size="icon"
+              onClick={() => setShowBoardSettings(true)}
               data-testid="board-settings"
             >
               <Settings className="w-5 h-5" />
