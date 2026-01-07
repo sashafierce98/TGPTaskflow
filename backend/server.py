@@ -242,8 +242,8 @@ async def create_board(input: CreateBoardInput, request: Request):
         {"name": "Backlog", "color": "#64748B", "order": 0, "wip_limit": None},
         {"name": "To Do", "color": "#3B82F6", "order": 1, "wip_limit": 15},
         {"name": "In Progress", "color": "#F59E0B", "order": 2, "wip_limit": 5},
-        {"name": "Questions", "color": "#8B5CF6", "order": 3, "wip_limit": None},
-        {"name": "Done", "color": "#10B981", "order": 4, "wip_limit": None}
+        {"name": "Done", "color": "#10B981", "order": 3, "wip_limit": None},
+        {"name": "Questions", "color": "#8B5CF6", "order": 4, "wip_limit": None}
     ]
     
     for col in default_columns:
