@@ -17,7 +17,13 @@ export default function Dashboard() {
   const [boards, setBoards] = useState([]);
   const [notifications, setNotifications] = useState([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [newBoard, setNewBoard] = useState({ name: "", description: "" });
+  const [newBoard, setNewBoard] = useState({ 
+    name: "", 
+    description: "",
+    customLimits: false,
+    todoLimit: 15,
+    wipLimit: 5
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,14 +55,29 @@ export default function Dashboard() {
     }
 
     try {
+      const boardData = {
+        name: newBoard.name,
+        description: newBoard.description,
+        custom_limits: newBoard.customLimits ? {
+          todo_limit: newBoard.todoLimit,
+          wip_limit: newBoard.wipLimit
+        } : null
+      };
+      
       await axios.post(
         `${BACKEND_URL}/api/boards`,
-        newBoard,
+        boardData,
         { withCredentials: true }
       );
       toast.success("Board created successfully");
       setShowCreateDialog(false);
-      setNewBoard({ name: "", description: "" });
+      setNewBoard({ 
+        name: "", 
+        description: "",
+        customLimits: false,
+        todoLimit: 15,
+        wipLimit: 5
+      });
       fetchData();
     } catch (error) {
       console.error("Failed to create board:", error);
