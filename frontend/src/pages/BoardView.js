@@ -606,7 +606,7 @@ export default function BoardView() {
                   className="focus:ring-[#2E5C38]"
                 />
                 <p className="text-xs text-[#64748B] mt-1">
-                  Current: {editingColumn.wip_limit || "Unlimited"} | Recommended for "In Progress": 3-5
+                  Current: {editingColumn.wip_limit || "Unlimited"} | Recommended for &quot;In Progress&quot;: 3-5
                 </p>
               </div>
               <div>
