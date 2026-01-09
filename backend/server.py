@@ -214,10 +214,8 @@ async def logout(request: Request, response: Response):
 @api_router.get("/boards", response_model=List[Board])
 async def get_boards(request: Request):
     user_id = await get_current_user(request)
-    boards = await db.boards.find(
-        {"$or": [{"owner_id": user_id}, {"collaborators": user_id}]},
-        {"_id": 0}
-    ).to_list(1000)
+    # Return all boards for organization-wide collaboration
+    boards = await db.boards.find({}, {"_id": 0}).to_list(1000)
     return boards
 
 @api_router.post("/boards", response_model=Board)
