@@ -159,7 +159,72 @@ export default function AdminPanel() {
         <div className="bg-white rounded-lg border border-[#E2E8F0]">
           <div className="p-6 border-b border-[#E2E8F0]">
             <h2 className="text-xl font-semibold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
-              User Management
+              Pending Approvals
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            {users.filter(u => !u.approved).length > 0 ? (
+              <table className="w-full">
+                <thead className="bg-[#FEF3C7]">
+                  <tr>
+                    <th className="text-left p-4 text-sm font-medium text-[#92400E]">User</th>
+                    <th className="text-left p-4 text-sm font-medium text-[#92400E]">Email</th>
+                    <th className="text-left p-4 text-sm font-medium text-[#92400E]">Joined</th>
+                    <th className="text-left p-4 text-sm font-medium text-[#92400E]">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.filter(u => !u.approved).map((user) => (
+                    <tr key={user.user_id} className="border-t border-[#E2E8F0]" data-testid={`pending-user-${user.user_id}`}>
+                      <td className="p-4">
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={user.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}`}
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <span className="font-medium text-[#1E293B]">{user.name}</span>
+                        </div>
+                      </td>
+                      <td className="p-4 text-[#475569]">{user.email}</td>
+                      <td className="p-4 text-[#475569]">{new Date(user.created_at).toLocaleDateString()}</td>
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            onClick={() => handleApproveUser(user.user_id)}
+                            data-testid={`approve-${user.user_id}`}
+                            className="bg-[#10B981] hover:bg-[#10B981]/90 text-white"
+                          >
+                            Approve
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleRejectUser(user.user_id)}
+                            data-testid={`reject-${user.user_id}`}
+                            className="text-[#EF4444] border-[#EF4444] hover:bg-[#EF4444] hover:text-white"
+                          >
+                            Reject
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="p-8 text-center text-[#64748B]">
+                No pending approvals
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg border border-[#E2E8F0] mt-8">
+          <div className="p-6 border-b border-[#E2E8F0]">
+            <h2 className="text-xl font-semibold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
+              Approved Users
             </h2>
           </div>
           <div className="overflow-x-auto">
@@ -173,7 +238,7 @@ export default function AdminPanel() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {users.filter(u => u.approved !== false).map((user) => (
                   <tr key={user.user_id} className="border-t border-[#E2E8F0]" data-testid={`user-row-${user.user_id}`}>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
