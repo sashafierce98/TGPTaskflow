@@ -83,6 +83,23 @@ export default function AdminPanel() {
     }
   };
 
+  const handleRemoveUser = async (userId, userName) => {
+    if (!window.confirm(`Are you sure you want to remove ${userName} from the organization?\n\nThis will:\n• Delete their account\n• Remove all their sessions\n• They will need to sign up again\n\nThis action cannot be undone.`)) {
+      return;
+    }
+    try {
+      await axios.delete(
+        `${BACKEND_URL}/api/admin/users/${userId}`,
+        { withCredentials: true }
+      );
+      toast.success("User removed successfully");
+      fetchData();
+    } catch (error) {
+      console.error("Failed to remove user:", error);
+      toast.error("Failed to remove user");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
