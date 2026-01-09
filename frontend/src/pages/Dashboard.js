@@ -95,6 +95,28 @@ export default function Dashboard() {
     }
   };
 
+  const handleDeleteBoard = async (boardId, boardName) => {
+    if (!window.confirm(`Are you sure you want to delete "${boardName}"? This will delete all columns, cards, and questions. This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `${BACKEND_URL}/api/boards/${boardId}`,
+        { withCredentials: true }
+      );
+      toast.success("Board deleted successfully");
+      fetchData();
+    } catch (error) {
+      console.error("Failed to delete board:", error);
+      if (error.response?.status === 403) {
+        toast.error("Only the board owner can delete the board");
+      } else {
+        toast.error("Failed to delete board");
+      }
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
