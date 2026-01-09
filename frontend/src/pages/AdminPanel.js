@@ -84,18 +84,30 @@ export default function AdminPanel() {
   };
 
   const handleRemoveUser = async (userId, userName) => {
-    if (!window.confirm(`Are you sure you want to remove ${userName} from the organization?\n\nThis will:\n• Delete their account\n• Remove all their sessions\n• They will need to sign up again\n\nThis action cannot be undone.`)) {
+    console.log("Remove user clicked:", userId, userName);
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to remove ${userName} from the organization?\n\nThis will:\n• Delete their account\n• Remove all their sessions\n• They will need to sign up again\n\nThis action cannot be undone.`
+    );
+    
+    console.log("User confirmed removal:", confirmed);
+    
+    if (!confirmed) {
       return;
     }
+
     try {
-      await axios.delete(
+      console.log("Sending delete request for user:", userId);
+      const response = await axios.delete(
         `${BACKEND_URL}/api/admin/users/${userId}`,
         { withCredentials: true }
       );
+      console.log("Delete response:", response);
       toast.success("User removed successfully");
       fetchData();
     } catch (error) {
       console.error("Failed to remove user:", error);
+      console.error("Error response:", error.response);
       toast.error("Failed to remove user");
     }
   };
