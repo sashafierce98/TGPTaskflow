@@ -301,7 +301,11 @@ export default function AdminPanel() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleRemoveUser(user.user_id, user.name)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleRemoveUser(user.user_id, user.name);
+                          }}
                           data-testid={`remove-user-${user.user_id}`}
                           className="text-[#EF4444] border-[#EF4444] hover:bg-[#EF4444] hover:text-white"
                         >
