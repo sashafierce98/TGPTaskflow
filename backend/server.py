@@ -266,10 +266,7 @@ async def get_board(board_id: str, request: Request):
     if not board:
         raise HTTPException(status_code=404, detail="Board not found")
     
-    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
-    if board["owner_id"] != user_id and user_id not in board.get("collaborators", []) and user.get("role") != "admin":
-        raise HTTPException(status_code=403, detail="Access denied")
-    
+    # Allow all authenticated users to view any board (organization-wide access)
     return board
 
 @api_router.delete("/boards/{board_id}")
