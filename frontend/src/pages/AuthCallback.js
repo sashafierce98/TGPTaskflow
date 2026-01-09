@@ -35,6 +35,13 @@ export default function AuthCallback() {
         );
 
         const user = response.data;
+        
+        // Check if user needs approval
+        if (user.approved === false) {
+          navigate("/pending", { replace: true });
+          return;
+        }
+        
         toast.success(`Welcome, ${user.name}!`);
         navigate("/dashboard", { state: { user }, replace: true });
       } catch (error) {
