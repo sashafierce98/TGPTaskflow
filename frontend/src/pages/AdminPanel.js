@@ -276,15 +276,27 @@ export default function AdminPanel() {
                       </span>
                     </td>
                     <td className="p-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleRoleChange(user.user_id, user.role === 'admin' ? 'user' : 'admin')}
-                        data-testid={`toggle-role-${user.user_id}`}
-                        className="text-[#2E5C38] border-[#2E5C38] hover:bg-[#2E5C38] hover:text-white"
-                      >
-                        {user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRoleChange(user.user_id, user.role === 'admin' ? 'user' : 'admin')}
+                          data-testid={`toggle-role-${user.user_id}`}
+                          className="text-[#2E5C38] border-[#2E5C38] hover:bg-[#2E5C38] hover:text-white"
+                        >
+                          {user.role === 'admin' ? 'Remove Admin' : 'Make Admin'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveUser(user.user_id, user.name)}
+                          data-testid={`remove-user-${user.user_id}`}
+                          className="text-[#EF4444] border-[#EF4444] hover:bg-[#EF4444] hover:text-white"
+                        >
+                          <UserX className="w-4 h-4 mr-1" />
+                          Remove
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
