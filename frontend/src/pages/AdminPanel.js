@@ -12,6 +12,7 @@ export default function AdminPanel() {
   const [users, setUsers] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userToRemove, setUserToRemove] = useState(null);
 
   useEffect(() => {
     fetchData();
