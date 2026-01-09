@@ -19,7 +19,16 @@ export default function ProtectedRoute({ children }) {
         const response = await axios.get(`${BACKEND_URL}/api/auth/me`, {
           withCredentials: true
         });
-        setUser(response.data);
+        const userData = response.data;
+        
+        // Check if user is approved
+        if (userData.approved === false) {
+          setIsAuthenticated(false);
+          setUser(null);
+          return;
+        }
+        
+        setUser(userData);
         setIsAuthenticated(true);
       } catch (error) {
         setIsAuthenticated(false);
