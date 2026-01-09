@@ -96,19 +96,30 @@ export default function Dashboard() {
   };
 
   const handleDeleteBoard = async (boardId, boardName) => {
-    if (!window.confirm(`Are you sure you want to delete "${boardName}"? This will delete all columns, cards, and questions. This action cannot be undone.`)) {
+    console.log("Delete board clicked:", boardId, boardName);
+    
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${boardName}"?\n\nThis will permanently delete:\n• All columns\n• All cards\n• All questions and answers\n\nThis action cannot be undone.`
+    );
+    
+    console.log("User confirmed:", confirmed);
+    
+    if (!confirmed) {
       return;
     }
 
     try {
-      await axios.delete(
+      console.log("Sending delete request for board:", boardId);
+      const response = await axios.delete(
         `${BACKEND_URL}/api/boards/${boardId}`,
         { withCredentials: true }
       );
+      console.log("Delete response:", response);
       toast.success("Board deleted successfully");
       fetchData();
     } catch (error) {
       console.error("Failed to delete board:", error);
+      console.error("Error response:", error.response);
       if (error.response?.status === 403) {
         toast.error("Only the board owner can delete the board");
       } else {
