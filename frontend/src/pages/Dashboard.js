@@ -255,9 +255,14 @@ export default function Dashboard() {
               {board.description && (
                 <p className="text-[#475569] text-sm mb-4">{board.description}</p>
               )}
-              <div className="flex items-center gap-2 text-xs text-[#64748B]">
-                <User className="w-4 h-4" />
-                <span>{board.collaborators.length + 1} members</span>
+              <div className="flex items-center justify-between text-xs text-[#64748B]">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  <span>Team Board</span>
+                </div>
+                {board.owner_id === user?.user_id && (
+                  <span className="text-[#2E5C38] font-medium">Owner</span>
+                )}
               </div>
             </div>
           ))}
