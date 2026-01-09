@@ -328,15 +328,15 @@ export default function AdminPanel() {
 
       {/* Remove User Confirmation Dialog */}
       <Dialog open={!!userToRemove} onOpenChange={(open) => !open && setUserToRemove(null)}>
-        <DialogContent>
+        <DialogContent className="bg-white">
           <DialogHeader>
             <DialogTitle style={{ fontFamily: 'Manrope' }}>Remove User</DialogTitle>
-            <DialogDescription className="pt-4">
+            <DialogDescription className="pt-4 text-[#475569]">
               Are you sure you want to remove <strong>{userToRemove?.userName}</strong>?
             </DialogDescription>
           </DialogHeader>
           
-          <div className="py-4">
+          <div className="py-4 bg-white">
             <p className="text-sm text-[#475569]">
               This will permanently delete their account and remove all their sessions. They will need to sign up again to regain access.
             </p>
@@ -345,7 +345,7 @@ export default function AdminPanel() {
             </p>
           </div>
 
-          <DialogFooter className="gap-2">
+          <DialogFooter className="gap-2 bg-white">
             <Button
               variant="outline"
               onClick={() => setUserToRemove(null)}
