@@ -293,9 +293,10 @@ async def get_columns(board_id: str, request: Request):
 async def create_column(board_id: str, input: CreateColumnInput, request: Request):
     user_id = await get_current_user(request)
     board = await db.boards.find_one({"board_id": board_id}, {"_id": 0})
-    if not board or board["owner_id"] != user_id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
     
+    # Allow all users to add columns (organization-wide collaboration)
     max_order = await db.columns.find({"board_id": board_id}).sort("order", -1).limit(1).to_list(1)
     order = max_order[0]["order"] + 1 if max_order else 0
     
