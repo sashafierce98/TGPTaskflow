@@ -431,8 +431,30 @@ async def update_user_role(target_user_id: str, role: str, request: Request):
     if user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="Admin only")
     
-    await db.users.update_one({"user_id": target_user_id}, {"$set": {"role": role}})
+    await db.users.update_one({" user_id": target_user_id}, {"$set": {"role": role}})
     return {"message": "Role updated"}
+
+@api_router.put("/admin/users/{target_user_id}/approve")
+async def approve_user(target_user_id: str, request: Request):
+    user_id = await get_current_user(request)
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    
+    await db.users.update_one({"user_id": target_user_id}, {"$set": {"approved": True}})
+    return {"message": "User approved"}
+
+@api_router.delete("/admin/users/{target_user_id}")
+async def reject_user(target_user_id: str, request: Request):
+    user_id = await get_current_user(request)
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+    
+    # Delete user and their sessions
+    await db.users.delete_one({"user_id": target_user_id})
+    await db.user_sessions.delete_many({"user_id": target_user_id})
+    return {"message": "User rejected"}
 
 @api_router.get("/admin/analytics")
 async def get_analytics(request: Request):
