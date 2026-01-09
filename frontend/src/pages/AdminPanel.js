@@ -51,6 +51,38 @@ export default function AdminPanel() {
     }
   };
 
+  const handleApproveUser = async (userId) => {
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/admin/users/${userId}/approve`,
+        {},
+        { withCredentials: true }
+      );
+      toast.success("User approved");
+      fetchData();
+    } catch (error) {
+      console.error("Failed to approve user:", error);
+      toast.error("Failed to approve user");
+    }
+  };
+
+  const handleRejectUser = async (userId) => {
+    if (!window.confirm("Are you sure you want to reject this user? This will delete their account.")) {
+      return;
+    }
+    try {
+      await axios.delete(
+        `${BACKEND_URL}/api/admin/users/${userId}`,
+        { withCredentials: true }
+      );
+      toast.success("User rejected");
+      fetchData();
+    } catch (error) {
+      console.error("Failed to reject user:", error);
+      toast.error("Failed to reject user");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
