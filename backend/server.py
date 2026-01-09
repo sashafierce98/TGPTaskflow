@@ -162,14 +162,18 @@ async def create_session(request: Request, response: Response):
             {"$set": {"name": data["name"], "picture": data.get("picture")}}
         )
     else:
-        # New users need admin approval
+        # Check if this is the first user
+        user_count = await db.users.count_documents({})
+        is_first_user = user_count == 0
+        
+        # New users need admin approval (except first user)
         user_doc = {
             "user_id": user_id,
             "email": data["email"],
             "name": data["name"],
             "picture": data.get("picture"),
-            "role": "user",
-            "approved": False,  # Requires admin approval
+            "role": "admin" if is_first_user else "user",
+            "approved": True if is_first_user else False,
             "created_at": datetime.now(timezone.utc).isoformat()
         }
         await db.users.insert_one(user_doc)
