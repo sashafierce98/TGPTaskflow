@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -10,6 +10,7 @@ export default function ProtectedRoute({ children }) {
   );
   const [user, setUser] = useState(useLocation().state?.user || null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.state?.user) return;
@@ -23,8 +24,7 @@ export default function ProtectedRoute({ children }) {
         
         // Check if user is approved
         if (userData.approved === false) {
-          setIsAuthenticated(false);
-          setUser(null);
+          navigate("/pending", { replace: true });
           return;
         }
         
@@ -36,7 +36,7 @@ export default function ProtectedRoute({ children }) {
     };
 
     checkAuth();
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   if (isAuthenticated === null) {
     return (
