@@ -549,36 +549,7 @@ export default function BoardView() {
         </DragDropContext>
       </div>
 
-      {showColumnSettings && editingColumn && (
-        <Dialog open={!!showCardDetail} onOpenChange={() => setShowCardDetail(null)}>
-          <DialogContent className="max-w-2xl" aria-describedby="card-detail-description">
-            <DialogHeader>
-              <DialogTitle style={{ fontFamily: 'Manrope' }}>{showCardDetail.title}</DialogTitle>
-            </DialogHeader>
-            <p id="card-detail-description" className="sr-only">View detailed information about this card</p>
-            <div className="space-y-4 mt-4">
-              <div>
-                <Label>Description</Label>
-                <p className="text-[#475569] mt-2">{showCardDetail.description || "No description"}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label>Priority</Label>
-                  <span className={`inline-block mt-2 text-xs px-3 py-1 rounded ${priorityColors[showCardDetail.priority]}`}>
-                    {showCardDetail.priority}
-                  </span>
-                </div>
-                {showCardDetail.due_date && (
-                  <div>
-                    <Label>Due Date</Label>
-                    <p className="text-[#475569] mt-2">{new Date(showCardDetail.due_date).toLocaleDateString()}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Card detail dialog will be added separately */}
 
       {showColumnSettings && editingColumn && (
         <Dialog open={!!showColumnSettings} onOpenChange={(open) => {
