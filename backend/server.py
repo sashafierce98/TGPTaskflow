@@ -320,10 +320,7 @@ async def update_column(column_id: str, input: CreateColumnInput, request: Reque
     if not column:
         raise HTTPException(status_code=404, detail="Column not found")
     
-    board = await db.boards.find_one({"board_id": column["board_id"]}, {"_id": 0})
-    if board["owner_id"] != user_id:
-        raise HTTPException(status_code=403, detail="Access denied")
-    
+    # Allow all users to update columns (organization-wide collaboration)
     await db.columns.update_one(
         {"column_id": column_id},
         {"$set": {"name": input.name, "wip_limit": input.wip_limit, "color": input.color}}
@@ -337,10 +334,7 @@ async def delete_column(column_id: str, request: Request):
     if not column:
         raise HTTPException(status_code=404, detail="Column not found")
     
-    board = await db.boards.find_one({"board_id": column["board_id"]}, {"_id": 0})
-    if board["owner_id"] != user_id:
-        raise HTTPException(status_code=403, detail="Access denied")
-    
+    # Allow all users to delete columns (organization-wide collaboration)
     await db.columns.delete_one({"column_id": column_id})
     await db.cards.delete_many({"column_id": column_id})
     return {"message": "Column deleted"}
