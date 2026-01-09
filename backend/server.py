@@ -162,12 +162,14 @@ async def create_session(request: Request, response: Response):
             {"$set": {"name": data["name"], "picture": data.get("picture")}}
         )
     else:
+        # New users need admin approval
         user_doc = {
             "user_id": user_id,
             "email": data["email"],
             "name": data["name"],
             "picture": data.get("picture"),
             "role": "user",
+            "approved": False,  # Requires admin approval
             "created_at": datetime.now(timezone.utc).isoformat()
         }
         await db.users.insert_one(user_doc)
