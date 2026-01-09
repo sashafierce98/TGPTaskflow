@@ -88,15 +88,15 @@ export default function AdminPanel() {
   const handleRemoveUser = async (userId, userName) => {
     console.log("Remove user clicked:", userId, userName);
     
-    const confirmed = window.confirm(
-      `Are you sure you want to remove ${userName} from the organization?\n\nThis will:\n• Delete their account\n• Remove all their sessions\n• They will need to sign up again\n\nThis action cannot be undone.`
-    );
-    
-    console.log("User confirmed removal:", confirmed);
-    
-    if (!confirmed) {
-      return;
-    }
+    // Use React dialog instead of window.confirm
+    setUserToRemove({ userId, userName });
+  };
+
+  const confirmRemoveUser = async () => {
+    if (!userToRemove) return;
+
+    const { userId, userName } = userToRemove;
+    console.log("Confirming removal for:", userId, userName);
 
     try {
       console.log("Sending delete request for user:", userId);
@@ -105,12 +105,14 @@ export default function AdminPanel() {
         { withCredentials: true }
       );
       console.log("Delete response:", response);
-      toast.success("User removed successfully");
+      toast.success(`${userName} removed successfully`);
+      setUserToRemove(null);
       fetchData();
     } catch (error) {
       console.error("Failed to remove user:", error);
       console.error("Error response:", error.response);
       toast.error("Failed to remove user");
+      setUserToRemove(null);
     }
   };
 
