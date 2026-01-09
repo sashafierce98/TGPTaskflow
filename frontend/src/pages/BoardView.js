@@ -141,11 +141,17 @@ export default function BoardView() {
   };
 
   const openColumnSettings = (column) => {
-    setEditingColumn({
-      ...column,
-      wip_limit: column.wip_limit ?? ""
-    });
-    setShowColumnSettings(column.column_id);
+    try {
+      console.log("Opening column settings for:", column);
+      setEditingColumn({
+        ...column,
+        wip_limit: column.wip_limit ?? ""
+      });
+      setShowColumnSettings(column.column_id);
+    } catch (error) {
+      console.error("Error opening column settings:", error);
+      toast.error("Failed to open column settings");
+    }
   };
 
   const handleAskQuestion = async () => {
