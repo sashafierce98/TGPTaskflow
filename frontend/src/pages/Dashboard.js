@@ -119,17 +119,49 @@ export default function Dashboard() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative"
-                data-testid="notifications-button"
-              >
-                <Bell className="w-5 h-5" />
-                {notifications.length > 0 && (
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#EF4444] rounded-full"></span>
-                )}
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="relative"
+                    data-testid="notifications-button"
+                  >
+                    <Bell className="w-5 h-5" />
+                    {notifications.length > 0 && (
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-[#EF4444] rounded-full"></span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-2">
+                    <h3 className="font-semibold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
+                      Deadline Notifications
+                    </h3>
+                    {notifications.length > 0 ? (
+                      <div className="space-y-2 max-h-[300px] overflow-y-auto">
+                        {notifications.map((notif, idx) => (
+                          <div 
+                            key={idx} 
+                            className={`p-3 rounded-lg border ${
+                              notif.type === 'overdue' 
+                                ? 'bg-[#FEE2E2] border-[#EF4444]' 
+                                : notif.type === 'due_today'
+                                ? 'bg-[#FEF3C7] border-[#F59E0B]'
+                                : 'bg-[#DBEAFE] border-[#3B82F6]'
+                            }`}
+                          >
+                            <p className="text-sm font-medium text-[#1E293B]">{notif.title}</p>
+                            <p className="text-xs text-[#64748B] mt-1">{notif.message}</p>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-[#64748B] py-4 text-center">No deadline notifications</p>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               {user?.role === "admin" && (
                 <Button
@@ -137,6 +169,7 @@ export default function Dashboard() {
                   size="icon"
                   onClick={() => navigate("/admin")}
                   data-testid="admin-button"
+                  title="Admin Panel"
                 >
                   <BarChart3 className="w-5 h-5" />
                 </Button>
