@@ -581,7 +581,12 @@ export default function BoardView() {
       )}
 
       {showColumnSettings && editingColumn && (
-        <Dialog open={!!showColumnSettings} onOpenChange={() => setShowColumnSettings(null)}>
+        <Dialog open={!!showColumnSettings} onOpenChange={(open) => {
+          if (!open) {
+            setShowColumnSettings(null);
+            setEditingColumn(null);
+          }
+        }}>
           <DialogContent aria-describedby="column-settings-description">
             <DialogHeader>
               <DialogTitle style={{ fontFamily: 'Manrope' }}>Column Settings</DialogTitle>
@@ -593,7 +598,7 @@ export default function BoardView() {
                 <Input
                   id="column-name"
                   data-testid="column-name-input"
-                  value={editingColumn.name}
+                  value={editingColumn?.name || ""}
                   onChange={(e) => setEditingColumn({ ...editingColumn, name: e.target.value })}
                   placeholder="Column name"
                   className="focus:ring-[#2E5C38]"
@@ -606,13 +611,13 @@ export default function BoardView() {
                   data-testid="wip-limit-input"
                   type="number"
                   min="0"
-                  value={editingColumn.wip_limit}
+                  value={editingColumn?.wip_limit ?? ""}
                   onChange={(e) => setEditingColumn({ ...editingColumn, wip_limit: e.target.value })}
                   placeholder="e.g., 5"
                   className="focus:ring-[#2E5C38]"
                 />
                 <p className="text-xs text-[#64748B] mt-1">
-                  Current: {editingColumn.wip_limit || "Unlimited"} | Recommended for &quot;In Progress&quot;: 3-5
+                  Current: {editingColumn?.wip_limit || "Unlimited"} | Recommended for &quot;In Progress&quot;: 3-5
                 </p>
               </div>
               <div>
