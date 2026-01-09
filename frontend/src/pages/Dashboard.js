@@ -296,30 +296,50 @@ export default function Dashboard() {
           {boards.map((board, idx) => (
             <div
               key={board.board_id}
-              className="staggered-fade-in bg-white rounded-lg border border-[#E2E8F0] p-6 hover:border-[#2E5C38] hover:-translate-y-1 transition-all duration-200 ease-out cursor-pointer"
-              onClick={() => navigate(`/board/${board.board_id}`)}
+              className="staggered-fade-in bg-white rounded-lg border border-[#E2E8F0] p-6 hover:border-[#2E5C38] hover:-translate-y-1 transition-all duration-200 ease-out relative group"
               data-testid={`board-card-${idx}`}
             >
-              <div className="flex items-start justify-between mb-4">
-                <div className="w-12 h-12 bg-[#2E5C38]/10 rounded-lg flex items-center justify-center">
-                  <Layout className="w-6 h-6 text-[#2E5C38]" />
+              <div 
+                className="cursor-pointer"
+                onClick={() => navigate(`/board/${board.board_id}`)}
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div className="w-12 h-12 bg-[#2E5C38]/10 rounded-lg flex items-center justify-center">
+                    <Layout className="w-6 h-6 text-[#2E5C38]" />
+                  </div>
                 </div>
-              </div>
-              <h3 className="text-xl font-semibold text-[#1E293B] mb-2" style={{ fontFamily: 'Manrope' }}>
-                {board.name}
-              </h3>
-              {board.description && (
-                <p className="text-[#475569] text-sm mb-4">{board.description}</p>
-              )}
-              <div className="flex items-center justify-between text-xs text-[#64748B]">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  <span>Team Board</span>
-                </div>
-                {board.owner_id === user?.user_id && (
-                  <span className="text-[#2E5C38] font-medium">Owner</span>
+                <h3 className="text-xl font-semibold text-[#1E293B] mb-2" style={{ fontFamily: 'Manrope' }}>
+                  {board.name}
+                </h3>
+                {board.description && (
+                  <p className="text-[#475569] text-sm mb-4">{board.description}</p>
                 )}
+                <div className="flex items-center justify-between text-xs text-[#64748B]">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    <span>Team Board</span>
+                  </div>
+                  {board.owner_id === user?.user_id && (
+                    <span className="text-[#2E5C38] font-medium">Owner</span>
+                  )}
+                </div>
               </div>
+              
+              {board.owner_id === user?.user_id && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-[#EF4444] hover:text-[#EF4444] hover:bg-[#FEE2E2]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteBoard(board.board_id, board.name);
+                  }}
+                  data-testid={`delete-board-${idx}`}
+                  title="Delete Board"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              )}
             </div>
           ))}
         </div>
