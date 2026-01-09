@@ -325,6 +325,61 @@ export default function AdminPanel() {
           </div>
         </div>
       </div>
+
+      {/* Remove User Confirmation Dialog */}
+      <Dialog open={!!userToRemove} onOpenChange={(open) => !open && setUserToRemove(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-[#EF4444]">
+              <AlertTriangle className="w-5 h-5" />
+              Remove User from Organization
+            </DialogTitle>
+            <DialogDescription className="pt-4">
+              Are you sure you want to remove <strong>{userToRemove?.userName}</strong> from TGP Bioplastics?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-3 py-4">
+            <p className="text-sm text-[#475569] font-medium">This action will:</p>
+            <ul className="space-y-2 text-sm text-[#64748B]">
+              <li className="flex items-start gap-2">
+                <span className="text-[#EF4444]">•</span>
+                <span>Delete their account permanently</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#EF4444]">•</span>
+                <span>Terminate all their active sessions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#EF4444]">•</span>
+                <span>Require them to sign up again for access</span>
+              </li>
+            </ul>
+            <div className="bg-[#FEF3C7] border border-[#F59E0B] rounded p-3 mt-4">
+              <p className="text-sm text-[#92400E] font-medium">
+                ⚠️ This action cannot be undone
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setUserToRemove(null)}
+              data-testid="cancel-remove-user"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={confirmRemoveUser}
+              data-testid="confirm-remove-user"
+              className="bg-[#EF4444] hover:bg-[#EF4444]/90 text-white"
+            >
+              Yes, Remove User
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
