@@ -626,9 +626,10 @@ export default function BoardView() {
                   {["#64748B", "#3B82F6", "#F59E0B", "#10B981", "#EF4444", "#8B5CF6", "#EC4899"].map((color) => (
                     <button
                       key={color}
+                      type="button"
                       onClick={() => setEditingColumn({ ...editingColumn, color })}
                       className={`w-8 h-8 rounded-full border-2 transition-all duration-200 ${
-                        editingColumn.color === color ? "border-[#2E5C38] scale-110" : "border-transparent"
+                        editingColumn?.color === color ? "border-[#2E5C38] scale-110" : "border-transparent"
                       }`}
                       style={{ backgroundColor: color }}
                       data-testid={`color-${color}`}
