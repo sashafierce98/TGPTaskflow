@@ -329,9 +329,10 @@ export default function Dashboard() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-[#EF4444] hover:text-[#EF4444] hover:bg-[#FEE2E2]"
+                  className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 text-[#EF4444] hover:text-white hover:bg-[#EF4444] z-10"
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     handleDeleteBoard(board.board_id, board.name);
                   }}
                   data-testid={`delete-board-${idx}`}
