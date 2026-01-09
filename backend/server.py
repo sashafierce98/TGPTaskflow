@@ -303,8 +303,21 @@ async def create_column(board_id: str, input: CreateColumnInput, request: Reques
         raise HTTPException(status_code=404, detail="Board not found")
     
     # Allow all users to add columns (organization-wide collaboration)
-    max_order = await db.columns.find({"board_id": board_id}).sort("order", -1).limit(1).to_list(1)
-    order = max_order[0]["order"] + 1 if max_order else 0
+    # Check if Questions column exists
+    questions_column = await db.columns.find_one({"board_id": board_id, "name": "Questions"}, {"_id": 0})
+    
+    if questions_column:
+        # Insert new column before Questions
+        order = questions_column["order"]
+        # Increment order of Questions column
+        await db.columns.update_one(
+            {"column_id": questions_column["column_id"]},
+            {"$set": {"order": order + 1}}
+        )
+    else:
+        # No Questions column, add at end
+        max_order = await db.columns.find({"board_id": board_id}).sort("order", -1).limit(1).to_list(1)
+        order = max_order[0]["order"] + 1 if max_order else 0
     
     column_doc = {
         "column_id": f"col_{uuid.uuid4().hex[:12]}",
