@@ -385,7 +385,7 @@ export default function BoardView() {
               >
                 <ArrowLeft className="w-5 h-5" />
               </Button>
-              <div>
+              <div className="flex-1">
                 <h1 className="text-2xl font-bold text-[#1E293B]" style={{ fontFamily: 'Manrope' }}>
                   {board?.name}
                 </h1>
@@ -394,14 +394,26 @@ export default function BoardView() {
                 )}
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowBoardSettings(true)}
-              data-testid="board-settings"
-            >
-              <Settings className="w-5 h-5" />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleEditBoard}
+                data-testid="edit-board-button"
+                title="Edit Board"
+              >
+                <Pencil className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowBoardSettings(true)}
+                data-testid="board-settings"
+                title="Board Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
