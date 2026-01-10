@@ -226,6 +226,57 @@ export default function BoardView() {
     }
   };
 
+  const handleEditCard = (card) => {
+    setShowEditCard({
+      ...card,
+      due_date: card.due_date ? card.due_date.split('T')[0] : ""
+    });
+  };
+
+  const handleUpdateCard = async () => {
+    if (!showEditCard?.title?.trim()) {
+      toast.error("Card title is required");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/cards/${showEditCard.card_id}`,
+        {
+          title: showEditCard.title,
+          description: showEditCard.description,
+          priority: showEditCard.priority,
+          due_date: showEditCard.due_date || null
+        },
+        { withCredentials: true }
+      );
+      toast.success("Card updated");
+      setShowEditCard(null);
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to update card:", error);
+      toast.error("Failed to update card");
+    }
+  };
+
+  const handleDeleteCard = async (cardId, cardTitle) => {
+    if (!window.confirm(`Are you sure you want to delete "${cardTitle}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `${BACKEND_URL}/api/cards/${cardId}`,
+        { withCredentials: true }
+      );
+      toast.success("Card deleted");
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to delete card:", error);
+      toast.error("Failed to delete card");
+    }
+  };
+
   const handleDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
