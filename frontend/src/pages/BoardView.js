@@ -473,14 +473,39 @@ export default function BoardView() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] ${
+                                  className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] group relative ${
                                     snapshot.isDragging ? 'card-drag-preview' : 'transition-colors duration-200 ease-out'
                                   }`}
-                                  onClick={() => setShowCardDetail(card)}
                                   data-testid={`card-${card.card_id}`}
                                 >
                                   <div className="flex items-start justify-between mb-2">
-                                    <h4 className="font-medium text-[#1E293B] flex-1">{card.title}</h4>
+                                    <h4 className="font-medium text-[#1E293B] flex-1 pr-2" onClick={() => setShowCardDetail(card)}>{card.title}</h4>
+                                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 text-[#64748B] hover:text-[#2E5C38] hover:bg-[#2E5C38]/10"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleEditCard(card);
+                                        }}
+                                        data-testid={`edit-card-${card.card_id}`}
+                                      >
+                                        <Pencil className="w-3 h-3" />
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 text-[#64748B] hover:text-[#EF4444] hover:bg-[#FEE2E2]"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDeleteCard(card.card_id, card.title);
+                                        }}
+                                        data-testid={`delete-card-${card.card_id}`}
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    </div>
                                     <span className={`text-xs px-2 py-1 rounded ${priorityColors[card.priority]}`}>
                                       {card.priority}
                                     </span>
