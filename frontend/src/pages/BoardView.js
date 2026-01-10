@@ -390,7 +390,12 @@ export default function BoardView() {
                   {board?.name}
                 </h1>
                 {board?.description && (
-                  <p className="text-sm text-[#475569]">{board.description}</p>
+                  <p 
+                    className="text-sm text-[#475569]"
+                    title={board.description}
+                  >
+                    {board.description}
+                  </p>
                 )}
               </div>
             </div>
