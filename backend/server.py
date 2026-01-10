@@ -469,7 +469,7 @@ async def update_user_role(target_user_id: str, role: str, request: Request):
     if user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="Admin only")
     
-    await db.users.update_one({" user_id": target_user_id}, {"$set": {"role": role}})
+    await db.users.update_one({"user_id": target_user_id}, {"$set": {"role": role}})
     return {"message": "Role updated"}
 
 @api_router.put("/admin/users/{target_user_id}/approve")
