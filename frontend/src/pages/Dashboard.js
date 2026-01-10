@@ -323,7 +323,12 @@ export default function Dashboard() {
                   {board.name}
                 </h3>
                 {board.description && (
-                  <p className="text-[#475569] text-sm mb-4">{board.description}</p>
+                  <p 
+                    className="text-[#475569] text-sm mb-4 line-clamp-2"
+                    title={board.description}
+                  >
+                    {board.description}
+                  </p>
                 )}
                 <div className="flex items-center justify-between text-xs text-[#64748B]">
                   <div className="flex items-center gap-2">
