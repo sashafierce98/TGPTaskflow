@@ -265,6 +265,10 @@ async def create_board(input: CreateBoardInput, request: Request):
     board = await db.boards.find_one({"board_id": board_id}, {"_id": 0})
     return board
 
+class UpdateBoardInput(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+
 @api_router.get("/boards/{board_id}", response_model=Board)
 async def get_board(board_id: str, request: Request):
     user_id = await get_current_user(request)
@@ -276,7 +280,7 @@ async def get_board(board_id: str, request: Request):
     return board
 
 @api_router.put("/boards/{board_id}")
-async def update_board(board_id: str, name: str = None, description: str = None, request: Request = None):
+async def update_board(board_id: str, input: UpdateBoardInput, request: Request):
     user_id = await get_current_user(request)
     board = await db.boards.find_one({"board_id": board_id}, {"_id": 0})
     if not board:
@@ -284,10 +288,10 @@ async def update_board(board_id: str, name: str = None, description: str = None,
     
     # Allow all users to update board (organization-wide collaboration)
     update_data = {"updated_at": datetime.now(timezone.utc).isoformat()}
-    if name is not None:
-        update_data["name"] = name
-    if description is not None:
-        update_data["description"] = description
+    if input.name is not None:
+        update_data["name"] = input.name
+    if input.description is not None:
+        update_data["description"] = input.description
     
     await db.boards.update_one({"board_id": board_id}, {"$set": update_data})
     return {"message": "Board updated"}
