@@ -1036,6 +1036,48 @@ export default function BoardView() {
           </DialogContent>
         </Dialog>
       )}
+
+      {showEditBoard && editingBoard && (
+        <Dialog open={showEditBoard} onOpenChange={setShowEditBoard}>
+          <DialogContent aria-describedby="edit-board-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Edit Board</DialogTitle>
+            </DialogHeader>
+            <p id="edit-board-description" className="sr-only">Edit board name and description</p>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="edit-board-name">Board Name</Label>
+                <Input
+                  id="edit-board-name"
+                  data-testid="edit-board-name-input"
+                  value={editingBoard?.name || ""}
+                  onChange={(e) => setEditingBoard({ ...editingBoard, name: e.target.value })}
+                  placeholder="Board name"
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-board-description">Description</Label>
+                <Textarea
+                  id="edit-board-description"
+                  data-testid="edit-board-description-input"
+                  value={editingBoard?.description || ""}
+                  onChange={(e) => setEditingBoard({ ...editingBoard, description: e.target.value })}
+                  placeholder="Board description (optional)"
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <Button
+                onClick={handleUpdateBoard}
+                data-testid="update-board-submit"
+                className="w-full bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+              >
+                Update Board
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
