@@ -279,6 +279,39 @@ export default function BoardView() {
     }
   };
 
+  const handleEditBoard = () => {
+    setEditingBoard({
+      name: board?.name || "",
+      description: board?.description || ""
+    });
+    setShowEditBoard(true);
+  };
+
+  const handleUpdateBoard = async () => {
+    if (!editingBoard?.name?.trim()) {
+      toast.error("Board name is required");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `${BACKEND_URL}/api/boards/${boardId}`,
+        {
+          name: editingBoard.name,
+          description: editingBoard.description
+        },
+        { withCredentials: true }
+      );
+      toast.success("Board updated");
+      setShowEditBoard(false);
+      setEditingBoard(null);
+      fetchBoardData();
+    } catch (error) {
+      console.error("Failed to update board:", error);
+      toast.error("Failed to update board");
+    }
+  };
+
   const handleDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
 
