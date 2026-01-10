@@ -31,6 +31,8 @@ export default function BoardView() {
   const [showEditCard, setShowEditCard] = useState(null);
   const [showColumnSettings, setShowColumnSettings] = useState(null);
   const [showBoardSettings, setShowBoardSettings] = useState(false);
+  const [showEditBoard, setShowEditBoard] = useState(false);
+  const [editingBoard, setEditingBoard] = useState(null);
   const [showQuestionDialog, setShowQuestionDialog] = useState(false);
   const [showAnswerDialog, setShowAnswerDialog] = useState(null);
   const [editingColumn, setEditingColumn] = useState(null);
