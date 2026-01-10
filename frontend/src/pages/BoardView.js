@@ -558,7 +558,12 @@ export default function BoardView() {
                                     </span>
                                   </div>
                                   {card.description && (
-                                    <p className="text-sm text-[#475569] mb-3 line-clamp-2">{card.description}</p>
+                                    <p 
+                                      className="text-sm text-[#475569] mb-3 line-clamp-2"
+                                      title={card.description}
+                                    >
+                                      {card.description}
+                                    </p>
                                   )}
                                   <div className="flex items-center gap-3 text-xs text-[#64748B]">
                                     {card.due_date && (
