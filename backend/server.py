@@ -275,6 +275,23 @@ async def get_board(board_id: str, request: Request):
     # Allow all authenticated users to view any board (organization-wide access)
     return board
 
+@api_router.put("/boards/{board_id}")
+async def update_board(board_id: str, name: str = None, description: str = None, request: Request = None):
+    user_id = await get_current_user(request)
+    board = await db.boards.find_one({"board_id": board_id}, {"_id": 0})
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+    
+    # Allow all users to update board (organization-wide collaboration)
+    update_data = {"updated_at": datetime.now(timezone.utc).isoformat()}
+    if name is not None:
+        update_data["name"] = name
+    if description is not None:
+        update_data["description"] = description
+    
+    await db.boards.update_one({"board_id": board_id}, {"$set": update_data})
+    return {"message": "Board updated"}
+
 @api_router.delete("/boards/{board_id}")
 async def delete_board(board_id: str, request: Request):
     user_id = await get_current_user(request)
