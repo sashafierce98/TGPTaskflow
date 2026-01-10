@@ -659,6 +659,75 @@ export default function BoardView() {
         </Dialog>
       )}
 
+      {showEditCard && (
+        <Dialog open={!!showEditCard} onOpenChange={() => setShowEditCard(null)}>
+          <DialogContent aria-describedby="edit-card-description">
+            <DialogHeader>
+              <DialogTitle style={{ fontFamily: 'Manrope' }}>Edit Card</DialogTitle>
+            </DialogHeader>
+            <p id="edit-card-description" className="sr-only">Edit card details including title, description, priority, and due date</p>
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label htmlFor="edit-card-title">Title</Label>
+                <Input
+                  id="edit-card-title"
+                  data-testid="edit-card-title-input"
+                  value={showEditCard?.title || ""}
+                  onChange={(e) => setShowEditCard({ ...showEditCard, title: e.target.value })}
+                  placeholder="Card title"
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-card-description">Description</Label>
+                <Textarea
+                  id="edit-card-description"
+                  data-testid="edit-card-description-input"
+                  value={showEditCard?.description || ""}
+                  onChange={(e) => setShowEditCard({ ...showEditCard, description: e.target.value })}
+                  placeholder="Card description"
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-card-priority">Priority</Label>
+                <Select
+                  value={showEditCard?.priority || "medium"}
+                  onValueChange={(value) => setShowEditCard({ ...showEditCard, priority: value })}
+                >
+                  <SelectTrigger data-testid="edit-card-priority-select">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-card-due-date">Due Date</Label>
+                <Input
+                  id="edit-card-due-date"
+                  data-testid="edit-card-due-date-input"
+                  type="date"
+                  value={showEditCard?.due_date || ""}
+                  onChange={(e) => setShowEditCard({ ...showEditCard, due_date: e.target.value })}
+                  className="focus:ring-[#2E5C38]"
+                />
+              </div>
+              <Button
+                onClick={handleUpdateCard}
+                data-testid="update-card-submit"
+                className="w-full bg-[#2E5C38] hover:bg-[#2E5C38]/90 text-white"
+              >
+                Update Card
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {showColumnSettings && editingColumn && (
         <Dialog open={!!showColumnSettings} onOpenChange={(open) => {
           if (!open) {
