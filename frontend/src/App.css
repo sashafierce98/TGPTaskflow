@@ -22,9 +22,18 @@
   z-index: 9999;
 }
 
-/* Ensure smooth drop animation */
+/* Disable all transitions during drag-drop to prevent hanging */
+[data-rbd-drag-handle-context-id] {
+  transition: none !important;
+}
+
 [data-rbd-draggable-context-id] {
-  transition: transform 0.001s !important;
+  transition: none !important;
+}
+
+/* Ensure placeholder doesn't cause layout shifts */
+[data-rbd-placeholder-context-id] {
+  transition: none !important;
 }
 
 .staggered-fade-in {
