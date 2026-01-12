@@ -523,7 +523,18 @@ export default function BoardView() {
                           >
                           {columnCards.map((card, index) => (
                             <Draggable key={card.card_id} draggableId={card.card_id} index={index}>
-                              {(provided, snapshot) => (
+                              {(provided, snapshot) => {
+                                // Disable drop animation by removing transform transition
+                                const style = {
+                                  ...provided.draggableProps.style,
+                                };
+                                
+                                // When dropping, skip the animation entirely
+                                if (snapshot.isDropAnimating) {
+                                  style.transitionDuration = '0.001s';
+                                }
+                                
+                                return (
                                 <div
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
@@ -531,10 +542,7 @@ export default function BoardView() {
                                   className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] group relative ${
                                     snapshot.isDragging ? 'card-dragging' : ''
                                   }`}
-                                  style={{
-                                    ...provided.draggableProps.style,
-                                    transition: snapshot.isDragging ? 'none' : 'border-color 0.15s ease-out',
-                                  }}
+                                  style={style}
                                   data-testid={`card-${card.card_id}`}
                                 >
                                   <div className="flex items-start justify-between mb-2">
