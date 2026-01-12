@@ -74,15 +74,6 @@ code {
         font-family: 'Manrope', sans-serif;
         letter-spacing: -0.02em;
     }
-    
-    /* Force white background for all dialogs across all browsers */
-    [role="dialog"],
-    [role="alertdialog"],
-    .dialog-content,
-    [data-radix-dialog-content] {
-        background-color: #ffffff !important;
-        background: #ffffff !important;
-    }
 }
 
 @layer utilities {
