@@ -15,11 +15,16 @@
   background: rgb(148 163 184);
 }
 
-.card-drag-preview {
-  transform: scale(1.03) rotate(2deg);
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+.card-dragging {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
   opacity: 0.95;
-  transition: none !important;
+  transform: rotate(2deg);
+  z-index: 9999;
+}
+
+/* Ensure smooth drop animation */
+[data-rbd-draggable-context-id] {
+  transition: transform 0.001s !important;
 }
 
 .staggered-fade-in {

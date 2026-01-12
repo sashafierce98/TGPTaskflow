@@ -328,33 +328,32 @@ export default function BoardView() {
       return;
     }
 
-    // Create new cards array with the card moved
-    const newCards = Array.from(cards);
-    const movedCardIndex = newCards.findIndex(card => card.card_id === draggableId);
+    // Create new cards array with the card moved to its new position
+    const movedCard = cards.find(card => card.card_id === draggableId);
+    if (!movedCard) return;
+
+    // Build the new cards array with proper ordering
+    const newCards = cards.map(card => {
+      if (card.card_id === draggableId) {
+        return { ...card, column_id: destination.droppableId };
+      }
+      return card;
+    });
     
-    if (movedCardIndex === -1) return;
-    
-    const movedCard = newCards[movedCardIndex];
-    
-    // Update the card's column_id
-    const updatedCard = { ...movedCard, column_id: destination.droppableId };
-    newCards[movedCardIndex] = updatedCard;
-    
-    // Immediately update state for smooth UI
+    // Immediately update state for smooth UI (optimistic update)
     setCards(newCards);
 
-    // Then update backend
+    // Then update backend silently - DO NOT refetch to avoid visual glitch
     try {
       await axios.put(
         `${BACKEND_URL}/api/cards/${draggableId}`,
         { column_id: destination.droppableId },
         { withCredentials: true }
       );
-      // Silently refresh to ensure sync with backend
-      setTimeout(() => fetchBoardData(), 300);
+      // Success - no need to refetch, optimistic update is already correct
     } catch (error) {
       console.error("Failed to move card:", error);
-      // Revert on error
+      // Revert on error by refetching
       fetchBoardData();
       toast.error("Failed to move card");
     }
@@ -530,8 +529,12 @@ export default function BoardView() {
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
                                   className={`bg-white border border-[#E2E8F0] rounded-lg p-4 cursor-pointer hover:border-[#2E5C38] group relative ${
-                                    snapshot.isDragging ? 'card-drag-preview' : 'transition-colors duration-200 ease-out'
+                                    snapshot.isDragging ? 'card-dragging' : ''
                                   }`}
+                                  style={{
+                                    ...provided.draggableProps.style,
+                                    transition: snapshot.isDragging ? 'none' : 'border-color 0.15s ease-out',
+                                  }}
                                   data-testid={`card-${card.card_id}`}
                                 >
                                   <div className="flex items-start justify-between mb-2">
