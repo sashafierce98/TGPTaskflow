@@ -599,7 +599,8 @@ export default function BoardView() {
                                     )}
                                   </div>
                                 </div>
-                              )}
+                                );
+                              }}
                             </Draggable>
                           ))}
                           {provided.placeholder}
