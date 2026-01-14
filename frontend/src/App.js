@@ -28,7 +28,7 @@ function AppRouter() {
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <BrowserRouter basename="/TGPTaskflow">
         <AppRouter />
         <Toaster position="top-right" />
       </BrowserRouter>
