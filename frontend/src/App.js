@@ -28,6 +28,9 @@ function AppRouter() {
 function App() {
   return (
     <div className="App">
+      <div style={{ padding: 20 }}>
+      App Loaded
+      </div>
       <BrowserRouter basename="/TGPTaskflow">
         <AppRouter />
         <Toaster position="top-right" />
